@@ -2,18 +2,18 @@
 
 #include "fse.h"
 
-int8 *securerand(int16 size) {
-    int8 *start, *p;
+byte *securerand(word16 size) {
+    byte *start, *p;
     size_t n;
 
     assert(size > 0);
-    p=(int8 *)malloc(size);
+    p=(byte *)malloc(size);
     assert(p);
     start = p;
 
-    n = getrandom(p, (size_t)size, GRND_RANDOM|GRND_NONBLOCK)
+    arc4random_buf(p, (size_t)size);
 
-    if (n == size) {
+    if (p == size) {
         return p;
     } else if (n < 0){
         free(p);
@@ -33,7 +33,7 @@ int8 *securerand(int16 size) {
 }
 
 int main(int argc, char **argv) {
-    Arcfour *rc4;
+    Arc4 *rc4;
     char *infile, *outfile;
     int infd, outfd;
     int8 *key;
